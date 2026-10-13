@@ -1,8 +1,8 @@
 package tn.sahti.backend.entity;
-public enum UserStatus {
-    
 
-    ACTIF,        // compte utilisable
-    EN_ATTENTE,   // professionnel pas encore validé par l'admin
-    SUSPENDU      // compte bloqué par l'admin
+public enum UserStatus {
+    ACTIF,
+    EN_ATTENTE,
+    SUSPENDU,
+    REFUSE
 }

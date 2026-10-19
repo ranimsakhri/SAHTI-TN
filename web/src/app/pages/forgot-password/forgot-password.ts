@@ -24,8 +24,10 @@ import { AuthShell } from '../../shared/auth-shell';
       } @else if (step() === 2) {
         <p class="sous">Entrez le code reçu et choisissez un nouveau mot de passe.</p>
         <div class="alert alert-info">
-          Version démo : le code s'affiche dans le terminal du serveur (ligne « === DEMO === »).
-        </div>
+  Si votre adresse email correspond à un compte existant,
+  vous recevrez un code de réinitialisation.
+  Vérifiez également vos courriers indésirables.
+</div>
         <form (ngSubmit)="changePassword()" #f2="ngForm">
           <label class="field"><span>Code</span>
             <input name="token" [(ngModel)]="token" required placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">

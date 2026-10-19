@@ -33,7 +33,7 @@ public class AuthService {
     private final PasswordResetTokenRepository resetTokenRepository;
     private final ProfessionalApplicationRepository applicationRepository;
     private final FileStorageService fileStorage;
-
+    private final EmailService emailService;
     // ---------- Inscription client ----------
     public AuthResponse register(RegisterRequest req) {
         checkPasswords(req.getPassword(), req.getConfirmPassword());
@@ -123,18 +123,31 @@ public class AuthService {
     }
 
     // ---------- Mot de passe oublié (démo) ----------
+
     public void forgotPassword(String email) {
-        userRepository.findByEmail(email.trim().toLowerCase()).ifPresent(user -> {
+
+        String emailNormalise = email.trim().toLowerCase();
+
+        userRepository.findByEmail(emailNormalise).ifPresent(user -> {
+
             String token = UUID.randomUUID().toString();
-            resetTokenRepository.save(PasswordResetToken.builder()
-                    .token(token)
-                    .user(user)
-                    .expiresAt(LocalDateTime.now().plusMinutes(30))
-                    .used(false)
-                    .build());
-            log.info("=== DEMO === Token de réinitialisation pour {} : {}", email, token);
+
+            resetTokenRepository.save(
+                    PasswordResetToken.builder()
+                            .token(token)
+                            .user(user)
+                            .expiresAt(LocalDateTime.now().plusMinutes(30))
+                            .used(false)
+                            .build()
+            );
+
+            // Envoyer le code à l'adresse réelle de l'utilisateur
+            emailService.envoyerCodeReinitialisation(
+                    user.getEmail(), token
+            );
         });
     }
+
 
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken prt = resetTokenRepository.findByToken(token)

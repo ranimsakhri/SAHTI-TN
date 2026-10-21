@@ -153,10 +153,10 @@ import { RouterLink } from '@angular/router';
     .brand-inner { position: relative; text-align: center; padding: 70px 35px 40px; }
     .logo {
       position: relative; display: inline-block; color: #fff; text-decoration: none;
-      font-family: 'Lilita One', 'Poppins', sans-serif; font-weight: 400; font-size: clamp(105px, 28vw, 300px);
-      line-height: .82; letter-spacing: -1px; transform: rotate(-2deg);
+      font-family: 'Poppins', 'Arial Black', sans-serif; font-weight: 800; font-size: clamp(105px, 28vw, 300px);
+      line-height: .88; letter-spacing: .015em; transform: rotate(-1deg);
     }
-    .logo-country { position: absolute; top: -42px; right: -42px; font-family: 'Lilita One', sans-serif; font-size: .34em; }
+    .logo-country { position: absolute; top: -42px; right: -42px; font-family: 'Poppins', 'Arial Black', sans-serif; font-weight: 800; font-size: .34em; }
     .fez {
       position: absolute; z-index: 1; top: -.2em; left: -.16em;
       width: .48em; height: .34em; transform: rotate(-13deg);
@@ -199,14 +199,14 @@ import { RouterLink } from '@angular/router';
     }
     @media (max-width: 920px) {
       .shell { grid-template-columns: minmax(0, 1fr) minmax(330px, 46%); }
-      .logo { font-size: clamp(140px, 23vw, 230px); letter-spacing: -1px; }
+      .logo { font-size: clamp(140px, 23vw, 230px); }
       .logo-country { top: -32px; right: -31px; font-size: 34px; }
     }
     @media (max-width: 680px) {
       .shell { display: flex; flex-direction: column; min-height: 100svh; overflow: hidden; }
       .brand { min-height: 245px; height: 245px; flex: 0 0 245px; }
       .brand-inner { padding: 30px 20px 15px; }
-      .logo { font-size: 82px; letter-spacing: 0; }
+      .logo { font-size: 82px; }
       .logo-country { top: -24px; right: -27px; font-size: 27px; }
       .tagline { width: min(360px, 82vw); margin-top: 17px; padding: 9px 14px; font-size: 18px; border-radius: 10px; }
       .plate { width: 120px; top: -35px; left: -49px; }

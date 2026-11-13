@@ -1,0 +1,1716 @@
+
+<div class="client-app">
+  <header class="topbar">
+    <a class="brand" routerLink="/" aria-label="SA7TI, accueil">
+      <span class="brand-logo">
+        <img
+          class="brand-wordmark"
+          src="/assets/sa7ti-logo-original.png"
+          alt=""
+        />
+      </span>
+    </a>
+
+    <div class="topbar-right">
+      @if (isProfessional) {
+        <span class="plan-chip">
+          <span></span>
+          Espace professionnel
+        </span>
+
+        <div class="user-chip">
+          <span class="user-initials">{{ initials }}</span>
+          <span class="user-name">{{ displayName }}</span>
+        </div>
+      } @else {
+        <span class="plan-chip">
+          <span></span>
+          Offre découverte
+        </span>
+
+        <button
+          class="user-chip"
+          type="button"
+          (click)="setPage('profile')"
+          aria-label="Ouvrir mon profil"
+        >
+          <span class="user-initials">{{ initials }}</span>
+          <span class="user-name">{{ displayName }}</span>
+        </button>
+      }
+
+      <button
+        class="top-logout"
+        type="button"
+        (click)="logout()"
+        aria-label="Se déconnecter"
+      >
+        <span>Quitter</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <aside class="sidebar" aria-label="Navigation du tableau de bord">
+      @if (isProfessional) {
+        <p class="nav-caption">VOTRE ACTIVITÉ</p>
+
+        <button
+          type="button"
+          class="nav-item"
+          [class.active]="page() === 'inbox'"
+          (click)="openInbox()"
+        >
+          Demandes clients
+        </button>
+      } @else {
+        <p class="nav-caption">MON ESPACE</p>
+
+        <button
+          type="button"
+          class="nav-item"
+          [class.active]="page() === 'dashboard' && profile()"
+          (click)="setPage('dashboard')"
+        >
+          Vue d’ensemble
+        </button>
+
+        <a class="nav-item" routerLink="/journal">
+          Journal & activités
+        </a>
+
+        <button
+          type="button"
+          class="nav-item"
+          [class.active]="page() === 'profile' || !profile()"
+          (click)="setPage('profile')"
+        >
+          Mon profil santé
+        </button>
+
+        <button
+          type="button"
+          class="nav-item"
+          [class.active]="page() === 'support'"
+          (click)="setPage('support')"
+        >
+          Accompagnement
+          <span class="nav-badge">+</span>
+        </button>
+
+        @if (isChildAccount) {
+          <button
+            type="button"
+            class="nav-item"
+            [class.active]="page() === 'child-bmi'"
+            (click)="setPage('child-bmi')"
+          >
+            Mon IMC enfant
+          </button>
+        }
+
+        <button
+          type="button"
+          class="nav-item"
+          [class.active]="page() === 'recipes'"
+          (click)="setPage('recipes')"
+        >
+          Recettes healthy
+        </button>
+      }
+
+      <div class="sidebar-note">
+        <b>Un pas à la fois</b>
+        <p>Votre bien-être ne se résume pas à un chiffre.</p>
+      </div>
+
+      <button
+        type="button"
+        class="logout-button"
+        (click)="logout()"
+      >
+        Se déconnecter
+      </button>
+    </aside>
+
+    <main class="main-content">
+      @if (savedMessage()) {
+        <div class="notice success" role="status">
+          {{ savedMessage() }}
+        </div>
+      }
+
+      @if (profileError()) {
+        <div class="notice error" role="alert">
+          {{ profileError() }}
+        </div>
+      }
+
+      @if (isProfessional) {
+        <section class="inbox-page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">ESPACE PROFESSIONNEL</p>
+              <h1>Demandes d’accompagnement</h1>
+              <p class="heading-copy">
+                Les demandes destinées à {{ authRoleLabel }} apparaissent ici.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="edit-button"
+              (click)="loadInbox()"
+              [disabled]="inboxLoading()"
+            >
+              Actualiser
+            </button>
+          </div>
+
+          @if (inboxError()) {
+            <div class="notice error" role="alert">
+              {{ inboxError() }}
+            </div>
+          }
+
+          @if (inboxLoading()) {
+            <p class="inbox-state">Chargement des demandes…</p>
+          }
+
+          @if (!inboxLoading() && inboxRequests().length === 0 && !inboxError()) {
+            <div class="empty-inbox card">
+              <h2>Pas encore de demande</h2>
+              <p>
+                Les nouvelles demandes d’accompagnement s’afficheront ici.
+              </p>
+            </div>
+          }
+
+          <div class="request-list">
+            @for (request of inboxRequests(); track request.id) {
+              <article class="request-card card">
+                <div class="request-card-head">
+                  <div class="request-avatar">
+                    {{ request.clientFirstName.charAt(0) }}{{ request.clientLastName.charAt(0) }}
+                  </div>
+
+                  <div class="request-client">
+                    <h2>
+                      {{ request.clientFirstName }}
+                      {{ request.clientLastName }}
+                    </h2>
+                    <a [href]="'mailto:' + request.clientEmail">
+                      {{ request.clientEmail }}
+                    </a>
+                  </div>
+
+                  <span class="request-status">En attente</span>
+                </div>
+
+                @if (request.message) {
+                  <p class="request-message">{{ request.message }}</p>
+                }
+
+                <div class="request-card-foot">
+                  <time [attr.datetime]="request.createdAt">
+                    {{ request.createdAt | date:'d MMMM y, HH:mm':'':'fr-FR' }}
+                  </time>
+
+                  <span>
+                    {{ request.type === 'COACH' ? 'Coaching sportif' : 'Suivi nutritionnel' }}
+                  </span>
+                </div>
+              </article>
+            }
+          </div>
+
+          <p class="inbox-privacy">
+            Les demandes sont réservées aux professionnels de la spécialité
+            choisie par le client.
+          </p>
+        </section>
+
+      } @else if (page() === 'child-bmi') {
+        <section class="child-page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">GRANDIR EN ÉQUILIBRE</p>
+              <h1>Mon repère de croissance</h1>
+              <p class="heading-copy">
+                Un calcul indicatif, à interpréter selon l’âge et le sexe
+                sur les courbes de croissance.
+              </p>
+            </div>
+          </div>
+
+          <div class="child-layout">
+            <div class="child-form card">
+              <div class="child-progress">
+                <div>
+                  <b>Votre repère de croissance</b>
+                  <small>
+                    Âge, taille et poids renseignés dans votre profil
+                  </small>
+                </div>
+              </div>
+
+              <label class="form-field age-slider">
+                <span>
+                  Âge
+                  <b>{{ childAge() }} ans</b>
+                </span>
+
+                <input
+                  type="range"
+                  min="2"
+                  max="17"
+                  step="1"
+                  [ngModel]="childAge()"
+                  (ngModelChange)="childAge.set(+$event)"
+                  name="childAge"
+                >
+
+                <span class="range-ends">
+                  <small>2 ans</small>
+                  <small>17 ans</small>
+                </span>
+              </label>
+
+              <div class="form-row">
+                <label class="form-field">
+                  <span>Taille <small>(cm)</small></span>
+                  <input
+                    type="number"
+                    min="70"
+                    max="220"
+                    [ngModel]="childHeight()"
+                    (ngModelChange)="childHeight.set(+$event)"
+                    name="childHeight"
+                  >
+                </label>
+
+                <label class="form-field">
+                  <span>Poids <small>(kg)</small></span>
+                  <input
+                    type="number"
+                    min="5"
+                    max="200"
+                    step="0.1"
+                    [ngModel]="childWeight()"
+                    (ngModelChange)="childWeight.set(+$event)"
+                    name="childWeight"
+                  >
+                </label>
+              </div>
+
+              <fieldset class="child-sex">
+                <legend>
+                  Sexe de l’enfant
+                  <small>(pour la courbe de croissance)</small>
+                </legend>
+
+                <label [class.selected]="childGender() === 'FILLE'">
+                  <input
+                    type="radio"
+                    name="childGender"
+                    value="FILLE"
+                    [ngModel]="childGender()"
+                    (ngModelChange)="childGender.set($event)"
+                  >
+                  Fille
+                </label>
+
+                <label [class.selected]="childGender() === 'GARCON'">
+                  <input
+                    type="radio"
+                    name="childGender"
+                    value="GARCON"
+                    [ngModel]="childGender()"
+                    (ngModelChange)="childGender.set($event)"
+                  >
+                  Garçon
+                </label>
+              </fieldset>
+
+              @if (childProfileError()) {
+                <div class="notice error" role="alert">
+                  {{ childProfileError() }}
+                </div>
+              }
+
+              <button
+                type="button"
+                class="primary-button full-button"
+                (click)="saveChildProfile()"
+              >
+                Enregistrer et afficher sur le tableau de bord
+              </button>
+            </div>
+
+            <article class="child-result">
+              <div class="result-orbit orbit-one"></div>
+              <div class="result-orbit orbit-two"></div>
+
+              <span class="banner-kicker">VOTRE REPÈRE DU JOUR</span>
+
+              @if (childBmi !== null) {
+                <div class="child-bmi-value">
+                  {{ childBmi | number:'1.1-1' }}
+                  <small>kg/m²</small>
+                </div>
+                <p>IMC calculé pour {{ childAge() }} ans</p>
+              } @else {
+                <p>
+                  Vérifiez les valeurs d’âge, de taille et de poids saisies.
+                </p>
+              }
+
+              <div class="child-result-note">
+                <span>
+                  Chez les enfants, l’IMC s’interprète avec des courbes
+                  de croissance selon l’âge et le sexe. Ce chiffre seul
+                  ne permet pas de conclure.
+                </span>
+              </div>
+            </article>
+          </div>
+
+          <div class="child-clinical-note">
+            <b>Un repère, pas un diagnostic</b>
+            <p>
+              Pour comprendre la croissance d’un enfant, demandez l’avis
+              d’un pédiatre ou d’un professionnel de santé. Ce calculateur
+              ne classe pas l’IMC avec les seuils adultes.
+            </p>
+
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="openChildRecipes()"
+            >
+              Voir les recettes tunisiennes pour enfants
+            </button>
+          </div>
+        </section>
+
+      } @else if (page() === 'recipes') {
+        <section class="recipes-page">
+          <div class="recipes-hero">
+            <div>
+              <p class="banner-kicker">
+                {{ recipeCategory() === 'Enfants'
+                  ? 'DES SAVEURS TUNISIENNES POUR LES PETITS'
+                  : 'SAVEURS DE CHEZ NOUS, VERSION ÉQUILIBRÉE' }}
+              </p>
+
+              <h1>
+                {{ recipeCategory() === 'Enfants'
+                  ? 'À table en famille.'
+                  : 'La cuisine tunisienne qui fait du bien.' }}
+              </h1>
+
+              <p>
+                {{ recipeCategory() === 'Enfants'
+                  ? 'Des idées douces, sans piment, à adapter à l’âge et à l’appétit de chaque enfant.'
+                  : 'Des idées simples et colorées, avec les calories estimées par portion.' }}
+              </p>
+            </div>
+
+            <div class="recipe-hero-art" aria-hidden="true">
+              <span>🍅</span>
+              <span>🫒</span>
+              <span>🌿</span>
+            </div>
+          </div>
+
+          <div class="recipe-toolbar">
+            <label class="recipe-search">
+              <input
+                aria-label="Rechercher une recette"
+                [ngModel]="recipeSearch()"
+                (ngModelChange)="recipeSearch.set($event)"
+                placeholder="Un plat, un ingrédient..."
+              >
+            </label>
+
+            <div class="recipe-categories" aria-label="Filtrer par catégorie">
+              @for (category of recipeCategories; track category) {
+                <button
+                  type="button"
+                  [class.active]="recipeCategory() === category"
+                  (click)="setRecipeCategory(category)"
+                >
+                  {{ category }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="recipe-grid">
+            @for (recipe of filteredRecipes; track recipe.id) {
+              <article class="recipe-card">
+                <div
+                  class="recipe-image"
+                  [attr.data-recipe]="recipe.id"
+                >
+                  <span class="recipe-category">
+                    {{ recipe.category }}
+                  </span>
+
+                  @if (recipe.forChildren) {
+                    <span class="recipe-calories child-recipe-label">
+                      Pour les enfants
+                    </span>
+                  } @else {
+                    <span class="recipe-calories">
+                      {{ recipe.calories }}
+                      <small>kcal</small>
+                    </span>
+                  }
+                </div>
+
+                <div class="recipe-body">
+                  <div class="recipe-meta">
+                    <span>{{ recipe.time }} min</span>
+                    <span>1 portion</span>
+                  </div>
+
+                  <h2>{{ recipe.name }}</h2>
+                  <p>{{ recipe.description }}</p>
+
+                  <div class="recipe-ingredients">
+                    <b>À prévoir</b>
+                    <span>{{ recipe.ingredients }}</span>
+                  </div>
+
+                  @if (recipe.forChildren) {
+                    <div class="recipe-card-foot child-recipe-foot">
+                      <span>Recette familiale · épices douces</span>
+                      <span>Adapter la portion à l’appétit</span>
+                    </div>
+                  } @else {
+                    <div class="recipe-card-foot">
+                      <span>Calories estimées / portion</span>
+                      <span>≈ {{ recipe.calories }} kcal</span>
+                    </div>
+                  }
+                </div>
+              </article>
+            } @empty {
+              <div class="recipe-empty">
+                <b>Aucune recette trouvée</b>
+                <p>Essayez un autre plat ou ingrédient.</p>
+              </div>
+            }
+          </div>
+
+          <p class="recipe-disclaimer">
+            {{ recipeCategory() === 'Enfants'
+              ? 'Idées de repas à adapter à l’âge, aux allergies et à l’appétit de l’enfant. Demandez conseil à un professionnel de santé en cas de besoin.'
+              : 'Valeurs caloriques indicatives, variables selon les ingrédients et les portions. Les recettes sont des inspirations et ne remplacent pas un conseil nutritionnel personnalisé.' }}
+          </p>
+        </section>
+
+      } @else if (!profile() || page() === 'profile') {
+        <section class="profile-page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">
+                {{ profile() ? 'VOTRE ESPACE PERSONNEL' : 'BIENVENUE CHEZ SA7TI' }}
+              </p>
+
+              <h1>
+                {{ profile() ? 'Mon profil santé' : 'Faisons connaissance' }}
+              </h1>
+
+              <p class="heading-copy">
+                {{ profile()
+                  ? isChildDraft
+                    ? 'Ajustez les informations de croissance à tout moment.'
+                    : 'Ajustez vos informations et votre objectif à tout moment.'
+                  : isChildDraft
+                    ? 'Renseignez son âge, sa taille et son poids pour afficher un repère de croissance adapté.'
+                    : 'Quelques repères pour personnaliser votre expérience et calculer votre IMC.' }}
+              </p>
+            </div>
+
+            @if (profile()) {
+              <button
+                class="text-button"
+                type="button"
+                (click)="setPage('dashboard')"
+              >
+                Retour au tableau de bord
+              </button>
+            }
+          </div>
+
+          <div class="profile-layout">
+            <form
+              class="profile-form card"
+              (ngSubmit)="saveProfile()"
+              #profileForm="ngForm"
+            >
+              <div class="profile-stepper">
+                <div class="stepper-track">
+                  <span [style.width.%]="(profileStep() - 1) * 50"></span>
+                </div>
+
+                <button
+                  type="button"
+                  class="stepper-step"
+                  [class.current]="profileStep() === 1"
+                  [class.complete]="profileStep() > 1"
+                  (click)="profileStep() > 1 && profileStep.set(1)"
+                >
+                  <span>01</span>
+                  <b>Profil</b>
+                </button>
+
+                <button
+                  type="button"
+                  class="stepper-step"
+                  [class.current]="profileStep() === 2"
+                  [class.complete]="profileStep() > 2"
+                  [disabled]="profileStep() < 2"
+                  (click)="profileStep() > 2 && profileStep.set(2)"
+                >
+                  <span>02</span>
+                  <b>{{ isChildDraft ? 'Repères' : 'Objectif' }}</b>
+                </button>
+
+                <button
+                  type="button"
+                  class="stepper-step"
+                  [class.current]="profileStep() === 3"
+                  [disabled]="profileStep() < 3"
+                >
+                  <span>03</span>
+                  <b>Mon avatar</b>
+                </button>
+              </div>
+
+              @if (profileStep() === 1) {
+                <div class="form-section">
+                  <div class="section-title">
+                    <span class="step-number">01</span>
+                    <div>
+                      <h2>Commençons par vous</h2>
+                      <p>
+                        Vos informations servent uniquement à calculer
+                        vos repères santé.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <label class="form-field">
+                      <span>Prénom</span>
+                      <input
+                        name="firstName"
+                        [(ngModel)]="firstName"
+                        required
+                        maxlength="60"
+                        autocomplete="given-name"
+                      >
+                    </label>
+
+                    <label class="form-field">
+                      <span>Nom</span>
+                      <input
+                        name="lastName"
+                        [(ngModel)]="lastName"
+                        required
+                        maxlength="60"
+                        autocomplete="family-name"
+                      >
+                    </label>
+                  </div>
+
+                  <label class="form-field">
+                    <span>Date de naissance</span>
+                    <input
+                      name="birthDate"
+                      type="date"
+                      [min]="oldestBirthDate"
+                      [max]="todayDate"
+                      [(ngModel)]="birthDate"
+                      (ngModelChange)="onBirthDateChange($event)"
+                      required
+                    >
+                  </label>
+
+                  <label class="form-field">
+                    <span>
+                      {{ isChildDraft
+                        ? 'Sexe utilisé pour la courbe de croissance'
+                        : 'Sexe utilisé pour les repères de santé' }}
+                    </span>
+
+                    <select name="gender" [(ngModel)]="gender" required>
+                      @if (isChildDraft) {
+                        <option value="FILLE">Fille</option>
+                        <option value="GARCON">Garçon</option>
+                      } @else {
+                        <option value="FEMME">Femme</option>
+                        <option value="HOMME">Homme</option>
+                        <option value="AUTRE">Je préfère ne pas préciser</option>
+                      }
+                    </select>
+                  </label>
+
+                  <div class="form-row">
+                    <label class="form-field">
+                      <span>Taille <small>(cm)</small></span>
+                      <input
+                        name="heightCm"
+                        type="number"
+                        [(ngModel)]="heightCm"
+                        [min]="isChildDraft ? 70 : 100"
+                        [max]="isChildDraft ? 220 : 230"
+                        required
+                      >
+                    </label>
+
+                    <label class="form-field">
+                      <span>Poids actuel <small>(kg)</small></span>
+                      <input
+                        name="weightKg"
+                        type="number"
+                        [(ngModel)]="weightKg"
+                        [min]="isChildDraft ? 5 : 25"
+                        [max]="isChildDraft ? 200 : 350"
+                        step="0.1"
+                        required
+                      >
+                    </label>
+                  </div>
+                </div>
+
+              } @else if (profileStep() === 2) {
+                <div class="form-section">
+                  <div class="section-title">
+                    <span class="step-number">02</span>
+                    <div>
+                      <h2>
+                        {{ isChildDraft ? 'Vos repères de santé' : 'Votre objectif' }}
+                      </h2>
+                      <p>
+                        {{ isChildDraft
+                          ? 'Pour un enfant, le poids ne se fixe pas comme un objectif adulte.'
+                          : 'Choisissez une direction qui vous ressemble.' }}
+                      </p>
+                    </div>
+                  </div>
+
+                  @if (!isChildDraft) {
+                    <div class="goal-options">
+                      <label
+                        class="goal-option"
+                        [class.selected]="goal === 'PERDRE'"
+                      >
+                        <input
+                          type="radio"
+                          name="goal"
+                          value="PERDRE"
+                          [(ngModel)]="goal"
+                        >
+                        <span>
+                          <b>Perdre du poids</b>
+                          <small>À mon rythme</small>
+                        </span>
+                      </label>
+
+                      <label
+                        class="goal-option"
+                        [class.selected]="goal === 'MAINTENIR'"
+                      >
+                        <input
+                          type="radio"
+                          name="goal"
+                          value="MAINTENIR"
+                          [(ngModel)]="goal"
+                        >
+                        <span>
+                          <b>Me maintenir</b>
+                          <small>Garder l’équilibre</small>
+                        </span>
+                      </label>
+
+                      <label
+                        class="goal-option"
+                        [class.selected]="goal === 'PRENDRE'"
+                      >
+                        <input
+                          type="radio"
+                          name="goal"
+                          value="PRENDRE"
+                          [(ngModel)]="goal"
+                        >
+                        <span>
+                          <b>Prendre du poids</b>
+                          <small>Progressivement</small>
+                        </span>
+                      </label>
+                    </div>
+
+                    @if (goal !== 'MAINTENIR') {
+                      <label class="form-field target-field">
+                        <span>
+                          Mon poids objectif
+                          <small>(kg, facultatif)</small>
+                        </span>
+                        <input
+                          name="targetWeightKg"
+                          type="number"
+                          [(ngModel)]="targetWeightKg"
+                          min="25"
+                          max="350"
+                          step="0.1"
+                          placeholder="Ex. 68"
+                        >
+                      </label>
+                    }
+                  } @else {
+                    <div class="child-profile-tip">
+                      <p>
+                        Le repère IMC enfant est réservé aux profils de moins
+                        de 18 ans et doit être interprété sur une courbe de
+                        croissance avec un professionnel de santé.
+                      </p>
+                    </div>
+                  }
+
+                  <label class="form-field">
+                    <span>Niveau d’activité habituel</span>
+                    <select
+                      name="activityLevel"
+                      [(ngModel)]="activityLevel"
+                      required
+                    >
+                      <option value="SEDENTAIRE">Plutôt sédentaire</option>
+                      <option value="LEGER">Léger (1 à 2 jours par semaine)</option>
+                      <option value="MODERE">Modéré (3 à 4 jours par semaine)</option>
+                      <option value="INTENSE">Intense (5 à 6 jours par semaine)</option>
+                      <option value="TRES_INTENSE">Très intense</option>
+                    </select>
+                  </label>
+
+                  <label class="form-field">
+                    <span>
+                      Préférences alimentaires
+                      <small>(facultatif)</small>
+                    </span>
+                    <textarea
+                      name="dietaryPreferences"
+                      [(ngModel)]="dietaryPreferences"
+                      maxlength="500"
+                      rows="2"
+                      placeholder="Ex. végétarien, repas sans lactose"
+                    ></textarea>
+                  </label>
+
+                  <label class="form-field">
+                    <span>
+                      Allergies ou intolérances
+                      <small>(facultatif)</small>
+                    </span>
+                    <textarea
+                      name="allergies"
+                      [(ngModel)]="allergies"
+                      maxlength="500"
+                      rows="2"
+                      placeholder="Ex. arachides, gluten"
+                    ></textarea>
+                  </label>
+                </div>
+
+                @if (gender === 'FEMME') {
+                  <div class="form-section cycle-form">
+                    <div class="section-title">
+                      <span class="step-number">02</span>
+                      <div>
+                        <h2>
+                          Mon cycle
+                          <span class="optional-tag">facultatif</span>
+                        </h2>
+                        <p>
+                          Un calendrier estimatif, que vous pouvez compléter
+                          plus tard.
+                        </p>
+                      </div>
+                    </div>
+
+                    <label class="form-field">
+                      <span>Premier jour de mes dernières règles</span>
+                      <input
+                        name="lastPeriodStart"
+                        type="date"
+                        [(ngModel)]="lastPeriodStart"
+                      >
+                    </label>
+
+                    <div class="form-row">
+                      <label class="form-field">
+                        <span>
+                          Durée habituelle du cycle
+                          <small>(jours)</small>
+                        </span>
+                        <input
+                          name="cycleLength"
+                          type="number"
+                          [(ngModel)]="cycleLength"
+                          min="15"
+                          max="60"
+                          required
+                        >
+                      </label>
+
+                      <label class="form-field">
+                        <span>
+                          Durée des règles
+                          <small>(jours)</small>
+                        </span>
+                        <input
+                          name="periodDuration"
+                          type="number"
+                          [(ngModel)]="periodDuration"
+                          min="1"
+                          max="10"
+                          required
+                        >
+                      </label>
+                    </div>
+                  </div>
+                }
+
+                <p class="privacy-hint">
+                  Votre profil est enregistré sur votre compte SA7TI.
+                  Il n’est pas transmis à un professionnel sans votre
+                  consentement explicite.
+                </p>
+
+              } @else {
+                <div class="avatar-step-intro">
+                  <p class="eyebrow">DERNIÈRE ÉTAPE</p>
+                  <h2>Donnez vie à votre avatar</h2>
+                  <p>
+                    Choisissez vos traits, votre teint et votre style.
+                    Vous pourrez le modifier quand vous voulez.
+                  </p>
+                </div>
+              }
+
+              <div class="form-actions">
+                @if (profileStep() > 1) {
+                  <button
+                    class="secondary-button"
+                    type="button"
+                    (click)="previousProfileStep()"
+                  >
+                    Retour
+                  </button>
+                }
+
+                @if (profileStep() < 3) {
+                  <button
+                    class="primary-button"
+                    type="button"
+                    [disabled]="profileForm.invalid"
+                    (click)="nextProfileStep()"
+                  >
+                    Continuer
+                  </button>
+                } @else {
+                  <button
+                    class="primary-button"
+                    type="submit"
+                    [disabled]="profileSaving()"
+                  >
+                    {{ profileSaving()
+                      ? 'Enregistrement…'
+                      : profile()
+                        ? 'Enregistrer mon profil'
+                        : 'Découvrir mon tableau de bord' }}
+                  </button>
+                }
+
+                @if (profile()) {
+                  <a
+                    class="password-link"
+                    routerLink="/forgot-password"
+                  >
+                    Changer mon mot de passe
+                  </a>
+                }
+              </div>
+            </form>
+
+            <aside class="profile-aside">
+              @if (profileStep() === 3) {
+                <section class="avatar-card card">
+                  <div class="aside-heading">
+                    <div>
+                      <p class="eyebrow">MON PETIT DOUBLE</p>
+                      <h2>Créer mon avatar</h2>
+                    </div>
+                  </div>
+
+                  <div class="avatar-preview" aria-label="Aperçu de votre avatar">
+                    <svg viewBox="0 0 300 300" role="img" aria-label="Portrait illustré personnalisable">
+                      <defs>
+                        <linearGradient id="face-shade" x1="0" x2="1" y1="0" y2="1">
+                          <stop [attr.stop-color]="avatar.skin"/>
+                          <stop offset="1" [attr.stop-color]="avatarShadow"/>
+                        </linearGradient>
+
+                        <linearGradient id="hair-shine" x1="0" x2="1" y1="0" y2="1">
+                          <stop [attr.stop-color]="avatarHighlight"/>
+                          <stop offset=".48" [attr.stop-color]="avatar.hairColor"/>
+                          <stop offset="1" [attr.stop-color]="avatarHairShadow"/>
+                        </linearGradient>
+
+                        <radialGradient id="portrait-light">
+                          <stop stop-color="#fff" stop-opacity=".85"/>
+                          <stop offset="1" stop-color="#e6efdf" stop-opacity="0"/>
+                        </radialGradient>
+                      </defs>
+
+                      <circle cx="150" cy="150" r="145" fill="#eaf1e4"/>
+                      <circle cx="150" cy="145" r="120" fill="url(#portrait-light)"/>
+
+                      <path d="M55 300c4-62 38-92 95-92s91 30 95 92" fill="#315b41"/>
+                      <path d="M111 221l39 42 39-42-17-31h-44z" fill="#fffefa"/>
+                      <path d="M116 185h68v45c-8 12-20 18-34 18s-26-6-34-18z" [attr.fill]="avatarShadow"/>
+
+                      <path [attr.d]="hairBackPath" fill="url(#hair-shine)"/>
+
+                      <ellipse cx="91" cy="142" rx="12" ry="19" [attr.fill]="avatar.skin"/>
+                      <ellipse cx="209" cy="142" rx="12" ry="19" [attr.fill]="avatarShadow"/>
+
+                      <path
+                        d="M95 115c0-47 20-73 55-73s55 26 55 73v37c0 49-24 75-55 75s-55-26-55-75z"
+                        fill="url(#face-shade)"
+                      />
+
+                      <path
+                        d="M106 127c7-8 19-9 27-2m34 0c8-7 20-6 27 2"
+                        fill="none"
+                        stroke="#53372e"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                      />
+
+                      <ellipse cx="120" cy="139" rx="9" ry="7" fill="#fffefa"/>
+                      <ellipse cx="180" cy="139" rx="9" ry="7" fill="#fffefa"/>
+                      <ellipse cx="122" cy="140" rx="4.7" ry="6" [attr.fill]="avatarEyeColor"/>
+                      <ellipse cx="178" cy="140" rx="4.7" ry="6" [attr.fill]="avatarEyeColor"/>
+
+                      <circle cx="123.5" cy="138" r="1.8" fill="#fff"/>
+                      <circle cx="179.5" cy="138" r="1.8" fill="#fff"/>
+
+                      <path
+                        d="M111 151c7-4 16-4 23 0m54 0c-7-4-16-4-23 0"
+                        fill="none"
+                        stroke="#38281f"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                      />
+
+                      <path
+                        [attr.d]="avatar.nose === 'fin'
+                          ? 'M151 146c-2 14-12 26-7 30 3 3 9 3 13 0'
+                          : 'M151 146c-2 12-9 24-7 29 4 5 12 5 17 0'"
+                        fill="none"
+                        stroke="#9d6652"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                      />
+
+                      <ellipse cx="111" cy="168" rx="10" ry="5" fill="#de8372" opacity=".3"/>
+                      <ellipse cx="189" cy="168" rx="10" ry="5" fill="#de8372" opacity=".3"/>
+
+                      @if (avatar.mouth === 'sourire') {
+                        <path
+                          d="M137 187c7 6 19 6 26 0"
+                          fill="none"
+                          stroke="#98554e"
+                          stroke-width="4"
+                          stroke-linecap="round"
+                        />
+                        <path d="M140 188c5 4 15 4 20 0" fill="#b85d5a"/>
+                      } @else {
+                        <path
+                          d="M140 188c7-2 13-2 20 0"
+                          fill="none"
+                          stroke="#98554e"
+                          stroke-width="3.5"
+                          stroke-linecap="round"
+                        />
+                      }
+
+                      <path [attr.d]="hairFrontPath" fill="url(#hair-shine)"/>
+
+                      <path
+                        d="M105 99c8-23 25-37 46-42"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-opacity=".16"
+                        stroke-width="7"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+
+                    <span class="avatar-caption">
+                      Votre avatar, à votre image
+                    </span>
+                  </div>
+
+                  <div class="avatar-controls">
+                    <label class="form-field">
+                      <span>Teint</span>
+                      <select name="avatarSkin" [(ngModel)]="avatar.skin">
+                        <option value="#f1c7a5">Clair</option>
+                        <option value="#d99a72">Doré</option>
+                        <option value="#a96648">Mat</option>
+                        <option value="#704531">Foncé</option>
+                      </select>
+                    </label>
+
+                    <label class="form-field">
+                      <span>Cheveux</span>
+                      <select name="avatarHair" [(ngModel)]="avatar.hair">
+                        <option value="court">Courts</option>
+                        <option value="boucles">Bouclés</option>
+                        <option value="long">Longs</option>
+                      </select>
+                    </label>
+
+                    <label class="form-field">
+                      <span>Couleur des cheveux</span>
+                      <select name="avatarHairColor" [(ngModel)]="avatar.hairColor">
+                        <option value="#38281f">Bruns</option>
+                        <option value="#171916">Noirs</option>
+                        <option value="#95603e">Châtains</option>
+                        <option value="#c9904d">Blonds</option>
+                      </select>
+                    </label>
+
+                    <label class="form-field">
+                      <span>Yeux</span>
+                      <select name="avatarEyes" [(ngModel)]="avatar.eyes">
+                        <option value="marron">Marron</option>
+                        <option value="verts">Verts</option>
+                        <option value="bleus">Bleus</option>
+                      </select>
+                    </label>
+
+                    <label class="form-field">
+                      <span>Nez</span>
+                      <select name="avatarNose" [(ngModel)]="avatar.nose">
+                        <option value="fin">Fin</option>
+                        <option value="doux">Arrondi</option>
+                      </select>
+                    </label>
+
+                    <label class="form-field">
+                      <span>Bouche</span>
+                      <select name="avatarMouth" [(ngModel)]="avatar.mouth">
+                        <option value="sourire">Souriante</option>
+                        <option value="neutre">Naturelle</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <p class="avatar-note">
+                    Choisissez vos traits préférés : l’avatar est illustratif
+                    et personnalisable.
+                  </p>
+                </section>
+
+              } @else {
+                <section class="profile-peek card">
+                  <div class="peek-orbit">
+                    <span class="peek-face">☺</span>
+                  </div>
+
+                  <p class="eyebrow">VOTRE PARCOURS SA7TI</p>
+
+                  <h2>
+                    {{ profileStep() === 1
+                      ? 'À votre rythme, sans jugement.'
+                      : 'Un objectif qui vous ressemble.' }}
+                  </h2>
+
+                  <p>
+                    {{ profileStep() === 1
+                      ? 'Vos données restent privées. Nous ne transmettons pas votre profil santé.'
+                      : 'L’avatar personnalisable vous attend à la prochaine étape.' }}
+                  </p>
+
+                  <div class="peek-progress">
+                    <span [style.width.%]="profileStep() * 33.33"></span>
+                  </div>
+
+                  <small>Étape {{ profileStep() }} sur 3</small>
+                </section>
+              }
+
+              <section class="privacy-card">
+                <div>
+                  <b>Votre santé, votre rythme</b>
+                  <p>
+                    L’IMC est un indicateur général, pas un diagnostic médical.
+                  </p>
+                </div>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+      } @else if (page() === 'support') {
+        <section class="support-page">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">ALLER PLUS LOIN, ENSEMBLE</p>
+              <h1>Un accompagnement qui vous ressemble</h1>
+              <p class="heading-copy">
+                Un professionnel peut vous aider à transformer vos objectifs
+                en habitudes durables.
+              </p>
+            </div>
+          </div>
+
+          <div class="plans-grid">
+            <article class="plan-card card">
+              <span class="plan-label">ACTUELLEMENT</span>
+              <h2>Découverte</h2>
+              <p class="plan-description">
+                Un premier repère pour mieux comprendre votre situation.
+              </p>
+
+              <ul>
+                <li>Calcul et lecture générale de l’IMC</li>
+                <li>Votre profil et vos objectifs</li>
+                <li>Calendrier menstruel estimatif, si activé</li>
+              </ul>
+
+              <div class="plan-limit">
+                Pas de suivi personnalisé ni de conseils médicaux
+              </div>
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="setPage('dashboard')"
+              >
+                Continuer avec l’offre découverte
+              </button>
+            </article>
+
+            <article class="plan-card paid-plan">
+              <div class="paid-badge">POUR ÊTRE ACCOMPAGNÉ·E</div>
+              <span class="plan-label">CHOISISSEZ VOTRE FORMULE</span>
+
+              <h2>Un accompagnement à la carte</h2>
+
+              <p class="plan-description">
+                Prenez un seul service, ou combinez nutrition et coaching
+                à tarif réduit.
+              </p>
+
+              <div class="service-choices">
+                <label
+                  class="service-choice"
+                  [class.selected]="serviceSelection.nutrition"
+                >
+                  <input
+                    type="checkbox"
+                    name="nutritionOption"
+                    [ngModel]="serviceSelection.nutrition"
+                    (ngModelChange)="toggleService('NUTRITIONNISTE', $event)"
+                  >
+
+                  <span class="service-check">✓</span>
+
+                  <span class="service-copy">
+                    <b>Nutrition</b>
+                    <small>Suivi avec un·e nutritionniste</small>
+                  </span>
+
+                  <strong>20 <small>DT/mois</small></strong>
+                </label>
+
+                <label
+                  class="service-choice"
+                  [class.selected]="serviceSelection.coach"
+                >
+                  <input
+                    type="checkbox"
+                    name="coachOption"
+                    [ngModel]="serviceSelection.coach"
+                    (ngModelChange)="toggleService('COACH', $event)"
+                  >
+
+                  <span class="service-check">✓</span>
+
+                  <span class="service-copy">
+                    <b>Coaching sportif</b>
+                    <small>Suivi avec un·e coach</small>
+                  </span>
+
+                  <strong>20 <small>DT/mois</small></strong>
+                </label>
+              </div>
+
+              <div class="billing-switch" aria-label="Période de facturation">
+                <button
+                  type="button"
+                  [class.active]="billingCycle() === 'MONTHLY'"
+                  (click)="chooseBillingCycle('MONTHLY')"
+                >
+                  Mensuel
+                </button>
+
+                <button
+                  type="button"
+                  [class.active]="billingCycle() === 'ANNUAL'"
+                  [disabled]="selectedServices.length !== 2"
+                  (click)="chooseBillingCycle('ANNUAL')"
+                >
+                  Annuel
+                  <span>−20 DT</span>
+                </button>
+              </div>
+
+              <div class="selected-price">
+                <div>
+                  <span>Votre formule</span>
+                  <b>
+                    {{ selectedServices.length === 2
+                      ? 'Nutrition + Coach'
+                      : selectedServices[0] === 'COACH'
+                        ? 'Coach sportif'
+                        : selectedServices[0] === 'NUTRITIONNISTE'
+                          ? 'Nutrition'
+                          : 'Choisissez un service' }}
+                  </b>
+                </div>
+
+                @if (selectedServices.length) {
+                  <strong>
+                    {{ subscriptionPrice }}
+                    <small>DT</small>
+                    <span>
+                      / {{ billingCycle() === 'ANNUAL' ? 'an' : 'mois' }}
+                    </span>
+                  </strong>
+                }
+              </div>
+
+              @if (annualSavings) {
+                <p class="annual-saving">
+                  Vous économisez 20 DT sur l’année
+                  (400 DT au lieu de 420 DT).
+                </p>
+              }
+
+              <ul class="service-benefits">
+                <li>Échange direct avec le professionnel</li>
+                <li>Un accompagnement adapté à votre objectif</li>
+                <li>Vous choisissez le ou les services</li>
+              </ul>
+
+              <label class="form-field">
+                <span>
+                  Quelques mots sur votre besoin
+                  <small>(facultatif)</small>
+                </span>
+                <textarea
+                  [(ngModel)]="requestNote"
+                  name="requestNote"
+                  rows="3"
+                  maxlength="500"
+                  placeholder="Votre objectif, vos disponibilités..."
+                ></textarea>
+              </label>
+
+              <label class="request-consent">
+                <input
+                  type="checkbox"
+                  name="requestConsent"
+                  [(ngModel)]="requestConsent"
+                >
+                <span>
+                  J’accepte que mon nom et mon adresse e-mail soient transmis
+                  aux professionnels de cette spécialité pour répondre
+                  à ma demande.
+                </span>
+              </label>
+
+              @if (requestMessage()) {
+                <div class="notice success" role="status">
+                  {{ requestMessage() }}
+                </div>
+              }
+
+              @if (requestError()) {
+                <div class="notice error" role="alert">
+                  {{ requestError() }}
+                </div>
+              }
+
+              <button
+                type="button"
+                class="primary-button full-button"
+                (click)="submitRequest()"
+                [disabled]="savingRequest() || !requestConsent || !selectedServices.length"
+              >
+                {{ savingRequest() ? 'Envoi en cours…' : 'Demander cette formule' }}
+              </button>
+
+              <p class="payment-note">
+                La demande est gratuite et ne vaut pas souscription.
+                Le paiement et l’activation seront proposés séparément.
+              </p>
+            </article>
+          </div>
+        </section>
+
+      } @else {
+        <section class="dashboard-page">
+          <div class="page-heading dashboard-heading">
+            <div>
+              <p class="eyebrow">
+                {{ todayLabel }} · PRENEZ UN MOMENT POUR VOUS
+              </p>
+              <h1>Mar7ba, {{ displayName }}</h1>
+              <p class="heading-copy">
+                Chaque petit pas compte. Voici vos repères du moment.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="edit-button"
+              (click)="setPage('profile')"
+            >
+              Modifier mon profil
+            </button>
+          </div>
+
+          <section class="welcome-banner">
+            <div class="banner-copy">
+              @if (isChildAccount) {
+                <span class="banner-kicker">GRANDIR À SON RYTHME</span>
+                <h2>Un repère de croissance, sans pression.</h2>
+                <p>Les enfants grandissent chacun à leur rythme.</p>
+              } @else {
+                <span class="banner-kicker">VOTRE OBJECTIF</span>
+
+                <h2>
+                  {{ profile()?.goal === 'PERDRE'
+                    ? 'Avancer vers un poids qui vous fait du bien.'
+                    : profile()?.goal === 'PRENDRE'
+                      ? 'Construire votre équilibre, pas à pas.'
+                      : 'Cultiver votre équilibre au quotidien.' }}
+                </h2>
+
+                <p>Pas de pression : votre parcours vous appartient.</p>
+
+                @if (profile()?.targetWeightKg) {
+                  <span class="target-chip">
+                    Objectif : {{ profile()?.targetWeightKg }} kg
+                  </span>
+                }
+              }
+            </div>
+
+            <div class="banner-art" aria-hidden="true">
+              <span class="sun"></span>
+              <span class="leaf leaf-one"></span>
+              <span class="leaf leaf-two"></span>
+              <span class="banner-heart">♡</span>
+            </div>
+          </section>
+
+          @if (isChildAccount) {
+            <section class="child-dashboard-card card">
+              <div class="child-dashboard-copy">
+                <p class="eyebrow">VOTRE REPÈRE DE CROISSANCE</p>
+                <h2>Mon IMC enfant</h2>
+
+                @if (childBmi !== null) {
+                  <p>
+                    IMC indicatif :
+                    <strong>{{ childBmi | number:'1.1-1' }} kg/m²</strong>
+                    · {{ childAge() }} ans
+                    · {{ childGender() === 'FILLE' ? 'Fille' : 'Garçon' }}
+                  </p>
+                } @else {
+                  <p>
+                    Complétez votre taille et votre poids dans votre profil
+                    pour calculer ce repère.
+                  </p>
+                }
+
+                <small>
+                  À interpréter sur une courbe de croissance avec un
+                  professionnel de santé.
+                </small>
+              </div>
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="setPage('child-bmi')"
+              >
+                Voir mon repère
+              </button>
+            </section>
+          } @else {
+            <div class="metrics-grid">
+              <article class="metric-card bmi-card">
+                <div class="metric-heading">
+                  <span>MON INDICE DE MASSE CORPORELLE</span>
+
+                  <button
+                    type="button"
+                    class="info-button"
+                    [attr.aria-expanded]="bmiInfoOpen()"
+                    aria-controls="bmi-info"
+                    [attr.aria-label]="bmiInfoOpen()
+                      ? 'Masquer les informations sur l’IMC'
+                      : 'Afficher les informations sur l’IMC'"
+                    (click)="toggleBmiInfo()"
+                  >
+                    i
+                  </button>
+                </div>
+
+                <div class="bmi-reading">
+                  <strong>{{ bmi() | number:'1.1-1' }}</strong>
+                  <span>kg/m²</span>
+                </div>
+
+                <span
+                  class="status-pill"
+                  [class.good]="bmiStatus().tone === 'good'"
+                  [class.warning]="bmiStatus().tone === 'warning'"
+                >
+                  {{ bmiStatus().label }}
+                </span>
+
+                <div class="bmi-scale" aria-label="Échelle indicative de l’IMC">
+                  <div class="scale-bar">
+                    <span
+                      class="scale-marker"
+                      [style.left.%]="bmiMarker"
+                    ></span>
+                  </div>
+
+                  <div class="scale-labels">
+                    <span>Insuffisant</span>
+                    <span>Repère habituel</span>
+                    <span>Élevé</span>
+                  </div>
+                </div>
+
+                <p class="metric-footnote">
+                  Calcul basé sur {{ profile()?.heightCm }} cm et
+                  {{ profile()?.weightKg }} kg. L’IMC ne tient pas compte
+                  de toute votre situation de santé.
+                </p>
+
+                @if (bmiInfoOpen()) {
+                  <div
+                    class="bmi-info-panel"
+                    id="bmi-info"
+                    role="status"
+                  >
+                    L’IMC est un indicateur général calculé à partir du poids
+                    et de la taille. Il ne remplace pas l’avis d’un
+                    professionnel et ne résume pas à lui seul votre santé.
+                  </div>
+                }
+              </article>
+
+              <article class="metric-card goal-card">
+                <div class="metric-heading">
+                  <span>MON CAP</span>
+                </div>
+
+                <div class="goal-display">
+                  {{ profile()?.goal === 'PERDRE'
+                    ? 'Perdre du poids'
+                    : profile()?.goal === 'PRENDRE'
+                      ? 'Prendre du poids'
+                      : 'Me maintenir' }}
+                </div>
+
+                <p>
+                  {{ profile()?.targetWeightKg
+                    ? 'Un objectif choisi : ' + profile()?.targetWeightKg + ' kg.'
+                    : 'Un objectif à votre rythme, sans jugement.' }}
+                </p>
+
+                <button
+                  type="button"
+                  class="inline-link"
+                  (click)="setPage('profile')"
+                >
+                  Ajuster mon objectif
+                </button>
+              </article>
+            </div>
+          }
+
+          @if (!isChildAccount && profile()?.gender === 'FEMME') {
+            <section class="cycle-card card">
+              <div class="cycle-title">
+                <div>
+                  <p class="eyebrow">MON BIEN-ÊTRE</p>
+                  <h2>Mon cycle</h2>
+                </div>
+
+                <button
+                  type="button"
+                  class="text-button"
+                  (click)="setPage('profile')"
+                >
+                  Modifier
+                </button>
+              </div>
+
+              @if (cycleEstimate()) {
+                <div class="cycle-details">
+                  <div>
+                    <span class="cycle-dot rose"></span>
+                    <small>Prochaines règles estimées</small>
+                    <b>{{ cycleEstimate()?.nextPeriod }}</b>
+                  </div>
+
+                  <div>
+                    <span class="cycle-dot green-dot"></span>
+                    <small>Ovulation estimée</small>
+                    <b>{{ cycleEstimate()?.ovulation }}</b>
+                  </div>
+
+                  <div>
+                    <span class="cycle-dot gold"></span>
+                    <small>Fenêtre fertile estimée</small>
+                    <b>{{ cycleEstimate()?.fertileWindow }}</b>
+                  </div>
+                </div>
+
+                <div class="cycle-timeline">
+                  <span>Règles · {{ cycleEstimate()?.periodEnd }}</span>
+                  <div>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                  </div>
+                  <span>Cycle de {{ profile()?.cycleLength }} jours</span>
+                </div>
+              } @else {
+                <div class="cycle-empty">
+                  <div>
+                    <b>Envie de suivre votre cycle ?</b>
+                    <p>
+                      Ajoutez le premier jour de vos dernières règles
+                      à votre profil pour obtenir une estimation.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="secondary-button"
+                    (click)="setPage('profile')"
+                  >
+                    Compléter mon cycle
+                  </button>
+                </div>
+              }
+
+              <p class="cycle-disclaimer">
+                Estimation indicative uniquement : les cycles varient.
+                Ne pas utiliser pour éviter une grossesse ou remplacer
+                un avis médical.
+              </p>
+            </section>
+          }
+
+          <section class="discover-grid">
+            <a class="discover-card recipe-discover" routerLink="/journal">
+              <span class="discover-copy">
+                <small>MON SUIVI</small>
+                <b>Journal alimentaire et activités.</b>
+                <span>Consigner ma journée</span>
+              </span>
+              <span class="discover-arrow"></span>
+            </a>
+
+            <button
+              type="button"
+              class="discover-card recipe-discover"
+              (click)="setPage('recipes')"
+            >
+             
+              <span class="discover-copy">
+                <small>À TABLE, À LA TUNISIENNE</small>
+                <b>Des recettes healthy, pleines de goût.</b>
+                <span>Explorer nos idées équilibrées</span>
+              </span>
+              <span class="discover-arrow"></span>
+            </button>
+
+            <button
+              type="button"
+              class="discover-card child-discover"
+              (click)="openChildRecipes()"
+            >
+
+              <span class="discover-copy">
+                <small>À TABLE EN FAMILLE</small>
+                <b>Des recettes tunisiennes douces pour les enfants.</b>
+                <span>Voir les idées de repas</span>
+              </span>
+              <span class="discover-arrow"></span>
+            </button>
+          </section>
+
+          <section class="upgrade-banner">
+            <div>
+              <span class="banner-kicker">ENVIE D’ALLER PLUS LOIN ?</span>
+              <h2>Vous n’avez pas à avancer seul·e.</h2>
+              <p>
+                Un·e nutritionniste ou un·e coach peut vous accompagner
+                avec un suivi personnalisé.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="upgrade-button"
+              (click)="setPage('support')"
+            >
+              Découvrir l’accompagnement
+            </button>
+          </section>
+
+          <p class="free-note">
+            Votre offre découverte inclut le calcul de l’IMC.
+            Le suivi personnalisé est proposé avec un professionnel.
+          </p>
+        </section>
+      }
+
+      <footer class="footer">
+        <span>SA7TI TN · MANGER ET BOUGER</span>
+        <span>Votre bien-être, à votre rythme.</span>
+      </footer>
+    </main>
+  </div>
+</div>

@@ -14,7 +14,11 @@ import { AuthShell } from '../../shared/auth-shell';
 
       <form (ngSubmit)="submit()" #f="ngForm">
         <label class="field"><span>Email</span>
-          <input name="email" type="email" [(ngModel)]="email" required placeholder="vous@exemple.com">
+          <div class="email-input">
+            <input name="email" [type]="email.includes('@') ? 'email' : 'text'" [(ngModel)]="email"
+              required autocomplete="username" placeholder="votre.adresse" aria-label="Adresse e-mail">
+            @if (!email.includes('@')) { <span>@gmail.com</span> }
+          </div>
         </label>
         <label class="field"><span>Mot de passe</span>
           <input name="password" type="password" [(ngModel)]="password" required placeholder="••••••••">
@@ -50,7 +54,8 @@ export class Login {
   submit() {
     this.error.set('');
     this.loading.set(true);
-    this.auth.login({ email: this.email, password: this.password }).subscribe({
+    const email = this.email.trim();
+    this.auth.login({ email: email.includes('@') ? email : `${email}@gmail.com`, password: this.password }).subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (e) => {
         this.loading.set(false);

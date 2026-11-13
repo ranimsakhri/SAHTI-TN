@@ -17,6 +17,7 @@ export const routes: Routes = [
   { path: 'pro/pending', component: ProPending },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
+  { path: 'journal', loadComponent: () => import('./pages/journal/journal').then((module) => module.Journal), canActivate: [authGuard, roleGuard('CLIENT')] },
   { path: 'admin/professionals', component: AdminProfessionals, canActivate: [authGuard, roleGuard('ADMIN')] },
   { path: '**', redirectTo: '' },
 ];

@@ -1,0 +1,100 @@
+<main class="journal-page">
+  <header class="journal-heading">
+    <a routerLink="/dashboard" class="back-link">← Mon espace SA7TI</a>
+    <p class="eyebrow">MON SUIVI QUOTIDIEN</p>
+    <h1>Mon journal</h1>
+    <p>Consignez vos repas et vos activités. Les calories sont des estimations basées sur les aliments sélectionnés.</p>
+    <label class="date-field">Date du suivi
+      <input type="date" [ngModel]="date()" (ngModelChange)="setDate($event)" name="journalDate">
+    </label>
+  </header>
+
+  @if (error()) { <p class="notice error" role="alert">{{ error() }}</p> }
+  @if (success()) { <p class="notice success" role="status">{{ success() }}</p> }
+
+  <section class="progress-summary" aria-label="Progression du jour">
+    <article><span>Calories estimées</span><strong>{{ caloriesEstimated() }} kcal</strong></article>
+    <article><span>Repas consignés</span><strong>{{ meals().length }}</strong></article>
+    <article><span>Activité physique</span><strong>{{ activeMinutes() }} min</strong></article>
+  </section>
+
+  <div class="journal-columns">
+    <section class="journal-card">
+      <p class="eyebrow">ALIMENTATION</p>
+      <h2>Ajouter un aliment</h2>
+      <label>Rechercher dans les aliments tunisiens
+        <input type="search" [ngModel]="foodSearch()" (ngModelChange)="foodSearch.set($event)" name="foodSearch" placeholder="Ex. lablabi, dattes">
+      </label>
+      <label>Aliment
+        <select [(ngModel)]="selectedFoodId" name="foodId" required>
+          <option [ngValue]="0">Choisir un aliment</option>
+          @for (food of filteredFoods(); track food.id) {
+            <option [ngValue]="food.id">{{ food.name }} — {{ food.caloriesPer100g }} kcal / 100 g</option>
+          }
+        </select>
+      </label>
+      <div class="form-row">
+        <label>Repas
+          <select [(ngModel)]="mealType" name="mealType">
+            <option value="PETIT_DEJEUNER">Petit-déjeuner</option>
+            <option value="DEJEUNER">Déjeuner</option>
+            <option value="DINER">Dîner</option>
+            <option value="COLLATION">Collation</option>
+          </select>
+        </label>
+        <label>Quantité (g)
+          <input type="number" [(ngModel)]="quantityGrams" name="quantity" min="1" max="5000" step="1">
+        </label>
+      </div>
+      <button type="button" (click)="addMeal()" [disabled]="saving()">Ajouter au journal</button>
+    </section>
+
+    <section class="journal-card">
+      <p class="eyebrow">BOUGER À MON RYTHME</p>
+      <h2>Ajouter une activité</h2>
+      <label>Type d’exercice
+        <input type="text" [(ngModel)]="activityType" name="activityType" maxlength="80" placeholder="Ex. marche, vélo, renforcement">
+      </label>
+      <div class="form-row">
+        <label>Durée (minutes)
+          <input type="number" [(ngModel)]="durationMinutes" name="duration" min="1" max="1440">
+        </label>
+        <label>Intensité
+          <select [(ngModel)]="intensity" name="intensity">
+            <option value="FAIBLE">Faible</option>
+            <option value="MODEREE">Modérée</option>
+            <option value="ELEVEE">Élevée</option>
+          </select>
+        </label>
+      </div>
+      <label>Note (facultative)
+        <input type="text" [(ngModel)]="activityNotes" name="activityNotes" maxlength="500">
+      </label>
+      <button type="button" (click)="addActivity()" [disabled]="saving()">Ajouter l’activité</button>
+    </section>
+  </div>
+
+  <section class="journal-card entries-card">
+    <h2>Repas du jour</h2>
+    @if (loading()) { <p role="status">Chargement…</p> }
+    @if (!loading() && meals().length === 0) { <p>Aucun repas enregistré pour cette date.</p> }
+    @for (meal of meals(); track meal.id) {
+      <article class="entry-row">
+        <div><strong>{{ meal.foodName }}</strong><span>{{ meal.type }} · {{ meal.quantityGrams }} g · ≈ {{ meal.caloriesEstimated }} kcal</span></div>
+        <button type="button" class="remove-button" (click)="removeMeal(meal.id)" [attr.aria-label]="'Supprimer ' + meal.foodName">Supprimer</button>
+      </article>
+    }
+  </section>
+
+  <section class="journal-card entries-card">
+    <h2>Activités du jour</h2>
+    @if (activities().length === 0) { <p>Aucune activité enregistrée pour cette date.</p> }
+    @for (activity of activities(); track activity.id) {
+      <article class="entry-row">
+        <div><strong>{{ activity.type }}</strong><span>{{ activity.durationMinutes }} min · intensité {{ activity.intensity.toLowerCase() }}@if (activity.notes) { · {{ activity.notes }} }</span></div>
+        <button type="button" class="remove-button" (click)="removeActivity(activity.id)" [attr.aria-label]="'Supprimer ' + activity.type">Supprimer</button>
+      </article>
+    }
+  </section>
+  <p class="journal-disclaimer">Les informations et calories affichées sont indicatives et ne remplacent pas un avis médical ou nutritionnel.</p>
+</main>

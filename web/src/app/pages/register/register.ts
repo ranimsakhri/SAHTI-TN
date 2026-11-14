@@ -18,11 +18,21 @@ import { AuthShell } from '../../shared/auth-shell';
           <label class="field"><span>Prénom</span><input name="prenom" [(ngModel)]="prenom" required></label>
         </div>
         <label class="field"><span>Email</span>
-          <input name="email" type="email" [(ngModel)]="email" required>
+          <div class="email-input">
+            <input name="email" type="text" [(ngModel)]="email" required pattern="[^\\s@]+"
+                   autocomplete="username" inputmode="email" aria-label="Adresse Gmail">
+            <span aria-hidden="true">@gmail.com</span>
+          </div>
         </label>
         <label class="field"><span>Mot de passe</span>
-          <input name="password" type="password" [(ngModel)]="password" required>
-          <small class="hint">8 caractères minimum, avec lettres et chiffres</small>
+          <input name="password" type="password" [(ngModel)]="password" required minlength="8"
+                 pattern="(?=.*[A-Za-z])(?=.*[0-9]).*" #passwordField="ngModel">
+          <small class="hint" [class.hint-error]="passwordField.invalid && (passwordField.dirty || passwordField.touched)"
+                 aria-live="polite">
+            {{ passwordField.invalid && (passwordField.dirty || passwordField.touched)
+              ? 'Le mot de passe doit contenir au moins 8 caractères, avec des lettres et des chiffres.'
+              : '8 caractères minimum, avec lettres et chiffres' }}
+          </small>
         </label>
         <label class="field"><span>Confirmer le mot de passe</span>
           <input name="confirm" type="password" [(ngModel)]="confirmPassword" required>
@@ -59,13 +69,17 @@ export class Register {
 
   submit() {
     this.error.set('');
+    if (!this.isPasswordValid()) {
+      this.error.set('Le mot de passe doit contenir au moins 8 caractères, avec des lettres et des chiffres.');
+      return;
+    }
     if (this.password !== this.confirmPassword) {
       this.error.set('Les mots de passe ne correspondent pas');
       return;
     }
     this.loading.set(true);
     this.auth.register({
-      nom: this.nom, prenom: this.prenom, email: this.email,
+      nom: this.nom, prenom: this.prenom, email: `${this.email.trim()}@gmail.com`,
       password: this.password, confirmPassword: this.confirmPassword,
     }).subscribe({
       next: () => this.router.navigate(['/dashboard']),
@@ -74,5 +88,9 @@ export class Register {
         this.error.set(errMsg(e, "Erreur lors de l'inscription"));
       },
     });
+  }
+
+  private isPasswordValid(): boolean {
+    return this.password.length >= 8 && /[A-Za-z]/.test(this.password) && /[0-9]/.test(this.password);
   }
 }

@@ -8,7 +8,7 @@ import { errMsg } from '../../services/auth';
   imports: [RouterLink],
   template: `
     <header class="top">
-      <span class="logo">SA7TI<sup>TN</sup></span>
+      <img class="logo" src="/assets/sa7ti-logo-original.png" alt="SA7TI Tunisie, Manger et Bouger" />
       <a routerLink="/dashboard" class="back">← Tableau de bord</a>
     </header>
 
@@ -55,8 +55,7 @@ import { errMsg } from '../../services/auth';
   `,
   styles: [`
     .top { display:flex; justify-content:space-between; align-items:center; padding:14px 24px; background:#5f9e68; color:#fff; }
-    .logo { font-family:'Lilita One','Poppins',sans-serif; font-weight:400; font-size:30px; }
-    .logo sup { font-family:'Lilita One','Poppins',sans-serif; font-size:12px; }
+    .logo { display:block; width:130px; height:auto; }
     .back { color:#fff; text-decoration:none; font-weight:600; }
     main { max-width:860px; margin:0 auto; padding:28px 20px; }
     h1 { color:#143d2b; }

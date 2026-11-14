@@ -20,7 +20,8 @@ import tn.sahti.backend.security.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+import org.springframework.security.core.context.SecurityContextHolder;
+import tn.sahti.backend.dto.ChangePasswordRequest;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -163,6 +164,50 @@ public class AuthService {
 
         prt.setUsed(true);
         resetTokenRepository.save(prt);
+    }
+    // ---------- Changement du mot de passe ----------
+    @Transactional
+    public void changePassword(ChangePasswordRequest req) {
+
+        // Récupérer l'email de l'utilisateur connecté grâce au JWT
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        // Récupérer l'utilisateur
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Utilisateur introuvable"
+                ));
+
+        // Vérifier l'ancien mot de passe
+        if (!passwordEncoder.matches(req.getCurrentPassword(), user.getPasswordHash())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "L'ancien mot de passe est incorrect"
+            );
+        }
+
+        // Vérifier que le nouveau mot de passe est différent de l'ancien
+        if (passwordEncoder.matches(req.getNewPassword(), user.getPasswordHash())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Le nouveau mot de passe doit être différent de l'ancien"
+            );
+        }
+
+        // Vérifier la confirmation
+        if (!req.getNewPassword().equals(req.getConfirmNewPassword())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Les nouveaux mots de passe ne correspondent pas"
+            );
+        }
+
+        // Enregistrer le nouveau mot de passe
+        user.setPasswordHash(passwordEncoder.encode(req.getNewPassword()));
+        userRepository.save(user);
     }
 
     // ---------- Utilitaires ----------

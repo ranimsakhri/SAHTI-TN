@@ -10,7 +10,7 @@ import tn.sahti.backend.dto.*;
 import tn.sahti.backend.service.AuthService;
 
 import java.util.Map;
-
+import tn.sahti.backend.dto.ChangePasswordRequest;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -46,5 +46,16 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest req) {
         authService.resetPassword(req.getToken(), req.getNewPassword());
         return ResponseEntity.ok(Map.of("message", "Mot de passe modifié avec succès."));
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @Valid @RequestBody ChangePasswordRequest req) {
+
+        authService.changePassword(req);
+
+        return ResponseEntity.ok(Map.of(
+                "message",
+                "Votre mot de passe a été modifié avec succès."
+        ));
     }
 }

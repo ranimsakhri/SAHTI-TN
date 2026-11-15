@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_sahti"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp"
+        android:background="@android:color/transparent">
+
+        <!-- Barre supérieure avec flèche retour -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#CCFFF8EE"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+
+                <TextView
+                    android:id="@+id/btnBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="← Retour"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#263B2B"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Retour à l'accueil" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- Espace flexible : centre la carte verticalement -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Carte centrale semi-transparente : l'image reste visible autour,
+             le texte reste parfaitement lisible -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#E0FFF8EE"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="6dp"
+            app:strokeColor="#33FFFFFF"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="24dp">
+
+                <!-- Nom de l'application -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    app:cardBackgroundColor="#315B41"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="6dp">
+
+                    <ImageView
+                        android:id="@+id/imgLogo"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:padding="16dp"
+                        android:src="@drawable/logo_sahti"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="Logo SA7TI TN" />
+
+                </com.google.android.material.card.MaterialCardView>
+                <!-- Bienvenue -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bienvenue !"
+                    android:textColor="#263B2B"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connectez-vous à votre compte"
+                    android:textColor="#4A5A4E"
+                    android:textSize="15sp"
+                    android:layout_marginBottom="28dp" />
+
+                <!-- Email -->
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginBottom="16dp"
+                    android:hint="Adresse email"
+                    android:inputType="textEmailAddress"
+                    android:textSize="15sp"
+                    android:padding="14dp"
+                    android:background="@drawable/bg_card"
+                    android:textColor="#100505"
+                    android:textColorHint="#666666" />
+
+                <!-- Mot de passe avec bouton afficher/masquer -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mot de passe"
+                    app:boxBackgroundMode="none"
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="#263B2B">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:background="@drawable/bg_card"
+                        android:inputType="textPassword"
+                        android:textSize="15sp"
+                        android:padding="14dp"
+                        android:textColor="#090303"
+                        android:textColorHint="#666666" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Mot de passe oublié -->
+                <TextView
+                    android:id="@+id/tvForgotPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:text="Mot de passe oublié ?"
+                    android:textColor="#1E4D3A"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <!-- Bouton connexion -->
+                <Button
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="24dp"
+                    android:backgroundTint="#49784C"
+                    android:text="Se connecter"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="14dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Espace flexible du bas : laisse apparaître œufs / bol / décor -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#75A77A"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Retour"
+            android:padding="12dp"
+            android:layout_gravity="start"
+            app:tint="#1E4D3A" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:cardBackgroundColor="#315B41"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="6dp">
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:padding="16dp"
+                android:src="@drawable/logo_sahti"
+                android:scaleType="fitCenter"
+                android:contentDescription="Logo SA7TI TN" />
+
+        </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Complétez votre profil"
+            android:textColor="#263B2B"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@drawable/bg_card">
+
+            <!-- Date de naissance -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date de naissance *"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etDateNaissance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="JJ/MM/AAAA"
+                android:inputType="date"
+                android:textColor="#263B2B" />
+
+            <!-- Sexe -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sexe *"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rgSexe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <RadioButton
+                    android:id="@+id/rbFemme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Femme"
+                    android:textColor="#263B2B" />
+
+                <RadioButton
+                    android:id="@+id/rbHomme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Homme"
+                    android:textColor="#263B2B" />
+            </RadioGroup>
+
+            <!-- Taille -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Taille (cm) *"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etTaille"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Exemple : 165"
+                android:inputType="numberDecimal"
+                android:textColor="#263B2B" />
+
+            <!-- Poids -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Poids actuel (kg) *"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etPoids"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Exemple : 65"
+                android:inputType="numberDecimal"
+                android:textColor="#263B2B" />
+
+            <!-- Objectif -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Votre objectif *"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rgObjectif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <RadioButton
+                    android:id="@+id/rbPerdre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Perdre du poids"
+                    android:textColor="#263B2B" />
+
+                <RadioButton
+                    android:id="@+id/rbMaintenir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Maintenir mon poids"
+                    android:textColor="#263B2B" />
+
+                <RadioButton
+                    android:id="@+id/rbPrendre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prendre du poids"
+                    android:textColor="#263B2B" />
+            </RadioGroup>
+
+            <!-- Niveau d'activité -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Niveau d'activité habituel *"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spNiveauActivite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:spinnerMode="dropdown" />
+
+            <!-- Préférences alimentaires -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Préférences alimentaires (facultatif)"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etPreferencesAlimentaires"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Exemple : Végan, végétarien..."
+                android:inputType="textCapSentences"
+                android:textColor="#263B2B" />
+
+            <!-- Allergies et intolérances -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Allergies ou intolérances (facultatif)"
+                android:textColor="#263B2B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etAllergiesIntolerances"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Exemple : Gluten, lactose..."
+                android:inputType="textCapSentences"
+                android:textColor="#263B2B" />
+
+            <!-- Confidentialité -->
+            <TextView
+                android:id="@+id/tvConfidentialite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Votre profil est enregistré sur votre compte SAHTI. Il n'est pas transmis à un professionnel sans votre consentement explicite."
+                android:textColor="#526052"
+                android:textSize="13sp"
+                android:padding="12dp"
+                android:background="#EAF3E8"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Continuer -->
+            <Button
+                android:id="@+id/btnSaveProfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFE17A"
+                android:text="enregistrer mon profil"
+                android:textColor="#263B2B"
+                android:textStyle="bold" />
+
+            <!-- IMC -->
+            <TextView
+                android:id="@+id/tvIMC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#263B2B"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:visibility="gone" />
+
+            <!-- Changer le mot de passe -->
+            <Button
+                android:id="@+id/btnChangePassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Changer mon mot de passe"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:backgroundTint="#1E4D3A" />
+
+            <!-- Déconnexion -->
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Déconnexion"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:backgroundTint="#1E4D3A" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

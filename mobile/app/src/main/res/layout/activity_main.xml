@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#75A77A">
+
+    <!-- Illustration posée sur le fond vert (le vert reste visible grâce à l'alpha) -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background_sahti"
+        android:scaleType="fitXY"
+        android:alpha="0.45"
+        android:importantForAccessibility="no" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
+
+            <!-- Logo SA7TI : bandeau vert foncé du logo, arrondi -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                app:cardBackgroundColor="#315B41"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="6dp">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:padding="16dp"
+                    android:src="@drawable/logo_sahti"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Logo SA7TI TN" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Slogan -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#FFE17A"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center"
+                    android:text="Manger et Bouger à la tunisienne"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#263B2B" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Espace -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="65dp" />
+
+            <!-- Bienvenue -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mar7be bik"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:shadowColor="#66263B2B"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choisissez votre espace pour commencer."
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:shadowColor="#66263B2B"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="3"
+                android:layout_marginTop="8dp" />
+
+            <!-- Espace client -->
+            <LinearLayout
+                android:id="@+id/cardClient"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="18dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="25dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Je suis un client"
+                        android:textColor="#263B2B"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Suivez vos repas, votre activité et votre progression."
+                        android:textColor="#263B2B"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="➜"
+                    android:textSize="26sp"
+                    android:textColor="#75A77A" />
+
+            </LinearLayout>
+
+            <!-- Connexion -->
+            <TextView
+                android:id="@+id/txtLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Déjà un compte ? Se connecter"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:shadowColor="#66263B2B"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="4"
+                android:layout_marginTop="25dp"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

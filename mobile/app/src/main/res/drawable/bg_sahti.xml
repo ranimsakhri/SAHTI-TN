@@ -1,0 +1,15 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <bitmap
+            android:src="@drawable/background_sahti"
+            android:gravity="fill" />
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+
+        </shape>
+    </item>
+
+</layer-list>

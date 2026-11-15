@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#75A77A"
+    android:clipToPadding="false"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- En-tête : logo compact à gauche, badge offre à droite -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#315B41"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="96dp"
+                    android:layout_height="60dp"
+                    android:contentDescription="Logo SA7TI TN"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo_sahti" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Espace flexible : pousse le badge à droite -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#F2C94C"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+
+                <TextView
+                    android:id="@+id/tvOffre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Offre découverte"
+                    android:textColor="#1E4D3A"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- Profil enregistré -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            app:cardBackgroundColor="#EAF3E8"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="13dp"
+                android:text="✓ Votre profil est enregistré sur votre compte SA7TI."
+                android:textColor="#1E4D3A"
+                android:textSize="13sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Bienvenue -->
+        <TextView
+            android:id="@+id/tvBienvenue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Mar7be bik ! "
+            android:textColor="#1E4D3A"
+            android:textSize="27sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Chaque petit pas compte. Voici vos repères du moment."
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnModifierProfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#EDD07A"
+            android:text="Modifier mon profil"
+            android:textAllCaps="false"
+            android:textColor="#1E4D3A"
+            app:cornerRadius="20dp" />
+
+        <!-- Objectif général -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="#FDF6E9"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.06"
+                    android:text=" VOTRE OBJECTIF"
+                    android:textColor="#1E4D3A"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Cultiver votre équilibre au quotidien."
+                    android:textColor="#1E4D3A"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="Pas de pression : votre parcours vous appartient. Avancez à votre rythme, sans jugement."
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- IMC -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="MON INDICE DE MASSE CORPORELLE"
+                    android:textColor="#1E4D3A"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvIMC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="-- kg/m²"
+                    android:textColor="#1E4D3A"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCategorieIMC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="En attente de votre profil"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvDetailsIMC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Votre IMC sera calculé à partir de votre taille et de votre poids."
+                    android:textColor="#777777"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Mon cap -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#EAF3E8"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.06"
+                    android:text="MON CAP 🎯"
+                    android:textColor="#1E4D3A"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvObjectif"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Votre objectif"
+                    android:textColor="#1E4D3A"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Un objectif à votre rythme, sans jugement."
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Navigation vers les fonctionnalités -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="Découvrez votre espace 🌿"
+            android:textColor="#1E4D3A"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnJournal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#1E4D3A"
+            android:minHeight="56dp"
+            android:text="MON SUIVI - Consigner ma journée"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="16dp" />
+
+        <Button
+            android:id="@+id/btnRecettes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#EAF3E8"
+            android:minHeight="56dp"
+            android:text="À TABLE, À LA TUNISIENNE - Recettes healthy"
+            android:textAllCaps="false"
+            android:textColor="#1E4D3A"
+            app:cornerRadius="16dp" />
+
+        <Button
+            android:id="@+id/btnAccompagnement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#EAF3E8"
+            android:minHeight="56dp"
+            android:text="Découvrir l'accompagnement"
+            android:textAllCaps="false"
+            android:textColor="#1E4D3A"
+            app:cornerRadius="16dp" />
+
+        <!-- Avertissements -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="L'IMC est un indicateur général, pas un diagnostic médical."
+            android:textColor="#777777"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Les informations et calories affichées sont indicatives et ne remplacent pas un avis médical ou nutritionnel."
+            android:textColor="#777777"
+            android:textSize="12sp" />
+
+        <!-- Footer -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="Votre bien-être ne se résume pas à un chiffre."
+            android:textColor="#1E4D3A"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="SA7TI TN - MANGER ET BOUGER\nVotre bien-être, à votre rythme."
+            android:textColor="#777777"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</ScrollView>

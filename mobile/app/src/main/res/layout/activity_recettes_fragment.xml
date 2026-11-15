@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#75A77A">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Titre -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Nos recettes tunisienne "
+            android:textColor="#1E4D3A"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Barre de recherche -->
+        <EditText
+            android:id="@+id/etRechercheRecette"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:drawable/edit_text"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:hint="Rechercher une recette..."
+            android:padding="12dp"
+            android:singleLine="true"
+            android:textColor="#090303" />
+
+        <!-- Catégories -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnTout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#CD1C4743"
+                    android:text="Tout"
+                    android:textColor="#F8F4F4" />
+
+                <Button
+                    android:id="@+id/btnPetitDejeuner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#CD1C4743"
+                    android:text="Petit-déjeuner"
+                    android:textColor="#F8F4F4" />
+
+                <Button
+                    android:id="@+id/btnEntree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#CD1C4743"
+                    android:text="Entrée"
+                    android:textColor="#F8F4F4" />
+
+                <Button
+                    android:id="@+id/btnPlat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#CD1C4743"
+                    android:text="Plat"
+                    android:textColor="#F8F4F4" />
+
+                <Button
+                    android:id="@+id/btnDessert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#CD1C4743"
+                    android:text="Dessert"
+                    android:textColor="#F6F1F1" />
+                <Button
+                    android:id="@+id/btnPlatEnfant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#CD1C4743"
+                    android:text="Plats enfants"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="#F6F1F1"/>
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <!-- Liste des recettes -->
+        <LinearLayout
+            android:id="@+id/layoutListeRecettes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+
+</ScrollView>
